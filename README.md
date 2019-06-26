@@ -1,7 +1,5 @@
 Symfony proefopdracht
 ==========================
-[![PHP Version](https://img.shields.io/badge/php-%5E7.3-blue.svg)](https://img.shields.io/badge/php-%5E7.3-blue.svg)
-
 
 Documentation
 -------------
@@ -12,9 +10,9 @@ Documentation
 
 ## Components
 
-Symfony 4.3 with php 7.3
-MySQL 5.5.41
-Nginx 1.10.3
+* Symfony 4.3 with [![PHP Version](https://img.shields.io/badge/php-%5E7.3-blue.svg)](https://www.php.net/manual/en/)
+* MySQL 5.5.41
+* Nginx 1.10.3
 
 
 ## Installation
