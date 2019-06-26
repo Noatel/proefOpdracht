@@ -2,7 +2,6 @@ Symfony proefopdracht
 ==========================
 [![PHP Version](https://img.shields.io/badge/php-%5E7.3-blue.svg)](https://img.shields.io/badge/php-%5E7.3-blue.svg)
 
-Push messages to the eWarehousing middleware
 
 Documentation
 -------------
