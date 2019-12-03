@@ -23,6 +23,7 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"product"})
      */
     private $name;
 
@@ -34,6 +35,7 @@ class Product
     /**
      *
      * @ORM\OneToMany(targetEntity="App\Entity\OrderRule", mappedBy="product")
+     *
      */
     private $orderRule;
 

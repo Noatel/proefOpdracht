@@ -31,6 +31,7 @@ class OrderRule
      * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="orderRule")
      * @ORM\JoinColumn(nullable=false)
      * @JMS\MaxDepth(1)
+     * @JMS\Groups({"product"})
      */
     private $product;
 

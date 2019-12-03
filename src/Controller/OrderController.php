@@ -25,6 +25,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Serializer\Serializer;
 use JMS;
+use JMS\Serializer\SerializationContext;
+
 
 class OrderController extends AbstractController
 {
@@ -57,62 +59,36 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/order/getOrders", name="create")
+     * @Route("/order/getOrders", name="getOrderrs")
      */
     public function getOrders()
     {
 
         //Getting all the orders from the Entity Order
         $orders = $this->getDoctrine()
-                  ->getRepository(Order::class)
-                  ->findAll();
+            ->getRepository(Order::class)
+            ->findAll();
 
-        //Creating an array
-        $arrayCollection = array();
-        $i = 0;
-        $j = 0;
-
-        /** @var Order $order */
-        foreach ($orders as $order) {
-            //Defining the Order_reference and email in the array
-            $arrayCollection[$i] = array(
-                'order_reference' => $order->getReference(),
-                'email' => $order->getEmail(),
-            );
-
-
-            /** @var Address $address */
-            $addres = $order->getAddress();
-
-            //Getting the address and putting the values in the array address
-            $arrayCollection[$i]["address"]["Address"] = $addres->getAddress();
-            $arrayCollection[$i]["address"]["House_number"] = $addres->getHouseNumber();
-            $arrayCollection[$i]["address"]["Postal_Code"] = $addres->getPostalCode();
-            $arrayCollection[$i]["address"]["Residence"] = $addres->getResidence();
-            $arrayCollection[$i]["address"]["Country"] = $addres->getCountry();
-
-            /** @var OrderRule $order_rule */
-            $order_rules = $order->getOrderRule();
-
-            //Getting all the order rules, get the products from them
-            foreach ($order_rules as $order_rule) {
-
-                /** @var Product $product */
-                $product = $order_rule->getProduct();
-
-                //Because we only want the name from the product
-                $arrayCollection[$i]["products"][$j] = $product->getName();
-                $j++;
-            }
-
-            //Reset the value and adding the $i up to increase the array size
-            $j = 0;
-            $i++;
-        }
-
-        //Serilize the array to an json object
+        //Serialize the array to an json object
         $serializer = JMS\Serializer\SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($arrayCollection, 'json');
+        $jsonContent = $serializer->serialize($orders, 'json',SerializationContext::create()->setGroups(array('order')));
+
+        // Return a Response with encoded Json
+        return new Response($jsonContent, 200, ['Content-Type' => 'application/json']); }
+
+    /**
+     * @Route("/order/getOrderDetails", name="getOrdersDetails")
+     */
+    public function getOrderDetails()
+    {
+        //Getting all the orders from the Entity Order
+        $orders = $this->getDoctrine()
+            ->getRepository(Order::class)
+            ->findAll();
+
+        //Serialize the array to an json object
+        $serializer = JMS\Serializer\SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($orders, 'json',SerializationContext::create()->setGroups(array('address','order','product')));
 
         // Return a Response with encoded Json
         return new Response($jsonContent, 200, ['Content-Type' => 'application/json']);

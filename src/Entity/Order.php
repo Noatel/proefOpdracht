@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OrderRepository")
  *
@@ -20,13 +21,13 @@ class Order
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-
      */
     private $id;
 
     
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"order"})
      */
     private $reference;
 
@@ -35,18 +36,20 @@ class Order
      *     message = "The email '{{ value }}' is not a valid email."
      * )
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"order"})
      */
     private $email;
 
     /**
      * @JMS\MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\OrderRule", mappedBy="order")
+     * @JMS\Groups({"product"})
      */
     private $orderRule;
 
     /**
-     * @JMS\MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Address", inversedBy="orders")
+     * @JMS\Groups({"address"})
      */
     private $address;
 

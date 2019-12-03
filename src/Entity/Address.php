@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AdresRepository")
  */
@@ -22,26 +23,31 @@ class Address
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"address"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"address"})
      */
     private $houseNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"address"})
      */
     private $postalCode;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"address"})
      */
     private $residence;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"address"})
      */
     private $country;
 
