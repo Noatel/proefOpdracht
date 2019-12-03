@@ -1,3 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+#order/create:
+#    path: /order/create
+#    controller: App\Controller\OrderController::create

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello OrderController!{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+        <h1>Create a order</h1>
+        <form action="">
+            <div>
+                <label for="refrence">Refrence:</label>
+            <input type="text" name="refrence" id="refrence">
+            </div>
+
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email">
+
+            </div>
+
+            <div>
+            <label for="adres">Adres:</label>
+            <select name="adres" id="adres">
+                {% for adres in adresses %}
+                    <option value="{{ adres.id }}">{{ adres.adres }}</option>
+                {% endfor %}
+            </select>
+            </div>
+            <div>
+            <label for="product">Product:</label>
+            <select multiple name="product" id="product">
+                {% for product in products %}
+                    <option value="{{ product.id }}">{{ product.name }}</option>
+                {% endfor %}
+            </select>
+            </div>
+
+            <input type="button" id="submitForm" value="submit">
+        </form>
+        <div id="message">f</div>
+    </div>
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script>
+
+            $("#submitForm").click(function(){
+
+                $.ajax({
+                    url:"/order/createOrder",
+                    method:"POST",
+                    dataType:"JSON",
+                    data:{ reference: $("#refrence").val(),
+                           email:  $("#email").val(),
+                           adres:  $("#adres").val(),
+                           product: $("#product").val()
+                    }
+
+                }).done(function( html ) {
+                    $( "#message" ).append( html );
+                });
+
+            });
+
+
+    </script>
+{% endblock %}
