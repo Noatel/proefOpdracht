@@ -24,7 +24,6 @@ class Order
      */
     private $id;
 
-    
     /**
      * @ORM\Column(type="string", length=255)
      * @JMS\Groups({"order"})
@@ -42,7 +41,7 @@ class Order
 
     /**
      * @JMS\MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderRule", mappedBy="order")
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderRule", mappedBy="order", orphanRemoval=true)
      * @JMS\Groups({"product"})
      */
     private $orderRule;

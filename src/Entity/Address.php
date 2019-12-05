@@ -29,31 +29,35 @@ class Address
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      * @JMS\Groups({"address"})
      */
     private $houseNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      * @JMS\Groups({"address"})
      */
     private $postalCode;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      * @JMS\Groups({"address"})
      */
     private $residence;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      * @JMS\Groups({"address"})
      */
     private $country;
 
     /**
      * @JMS\MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="address")
+     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="address",orphanRemoval=true)
      */
     private $orders;
 

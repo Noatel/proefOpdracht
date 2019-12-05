@@ -27,6 +27,7 @@ class Product
      */
     private $name;
 
+
     /**
      * @ORM\Column(type="integer")
      */
@@ -34,10 +35,12 @@ class Product
 
     /**
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderRule", mappedBy="product")
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderRule", mappedBy="product", orphanRemoval=true)
      *
      */
     private $orderRule;
+
+
 
 
     public function __construct()
@@ -102,6 +105,18 @@ class Product
                 $orderRule->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
