@@ -41,24 +41,6 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/order/create", name="create")
-     */
-    public function create()
-    {
-        $repository = $this->getDoctrine()->getRepository(Address::class);
-        $adresses = $repository->findAll();
-
-        $repository = $this->getDoctrine()->getRepository(Product::class);
-        $products = $repository->findAll();
-
-        return $this->render('order/create.html.twig', [
-            'controller_name' => 'OrderController',
-            'adresses' => $adresses,
-            'products' => $products,
-        ]);
-    }
-
-    /**
      * @Route("/order/getOrders", name="getOrderrs")
      */
     public function getOrders()
@@ -95,22 +77,25 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/order/createOrder", name="createOrder", methods={"POST"})
+     * @Route("/order/store", name="store", methods={"POST"})
      */
-    public function createOrder(ValidatorInterface $validator, Request $request)
+    public function store(ValidatorInterface $validator, Request $request)
     {
+        //Getting the json data and decode it
         $content = $request->getContent();
         $data = json_decode($content);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository(Address::class);
 
-        /** @var Address $adres */
-        $adres = $repository->find($data->orders->adres_id);
+        //Get the manager and the address object
+        $entityManager = $this->getDoctrine()->getManager();
+
+        /** @var Address $address */
+        $repository = $this->getDoctrine()->getRepository(Address::class);
+        $address = $repository->find($data->orders->adres_id);
 
         //Create an Order
         $order = New Order();
-        $order->setAddress($adres);
+        $order->setAddress($address);
         $order->setEmail($data->orders->email);
 
         $repository = $this->getDoctrine()->getRepository(Order::class);
@@ -126,14 +111,18 @@ class OrderController extends AbstractController
             $latestProductId = 1;
         }
 
+        //If there are errors
         $errors = $validator->validate($order);
-
         if (count($errors) > 0) {
-            return $this->render('errors/validation.html.twig', [
-                'errors' => $errors,
-            ]);
+            $errorMessages = [];
+            foreach ($errors as $formError) {
+                $errorMessages[] = $formError->getMessage();
+            }
+            $response = new JsonResponse($errorMessages);
+            return $response;
         }
 
+        //If the orders got more then 1 product
         if ($data->orders->products > 0) {
             foreach ($data->orders->products as $product) {
 
@@ -150,16 +139,20 @@ class OrderController extends AbstractController
                 $orderRule->setQuantity($quantity);
                 $entityManager->persist($orderRule);
 
+                //Get the product name + id, we are going to use this for a reference
                 $productName = substr($product->getName(), 0, 3) . "-" . $latestProductId;
             }
         } else {
+            //If the order doesnt have any products
             $response = new JsonResponse(['error' => 'Please enter a product']);
             return $response;
         }
 
+        //Set the reference
         $order->setReference($productName);
 
 
+        //Set the order and flush it to the database
         $entityManager->persist($order);
         $entityManager->flush();
 
@@ -170,9 +163,9 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/order/editOrder/{id}", name="editOrder", methods={"PUT"})
+     * @Route("/order/update/{id}", name="updateOrder", methods={"POST"})
      */
-    public function editOrder(Request $request, $id)
+    public function update(Request $request, $id)
     {
         /** @var Order $order */
         $order = $this->getDoctrine()->getRepository(Order::class)->find($id);
@@ -238,5 +231,20 @@ class OrderController extends AbstractController
         $response = new JsonResponse(['data' => 'Updated the order with id ' . $order->getId()]);
         return $response;
     }
+
+    /**
+     * @Route("/order/delete/{id}", name="deleteOrder", methods={"POST"})
+     */
+    public function delete($id)
+    {
+        $order = $this->getDoctrine()->getRepository(Order::class)->find($id);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($order);
+        $entityManager->flush();
+
+        $response = new JsonResponse(['data' => 'The order with ' . $order->getId() . ' is deleted']);
+        return $response;
+    }
+
 
 }

@@ -26,11 +26,13 @@ class Order
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      * @JMS\Groups({"order"})
      */
     private $reference;
 
     /**
+     * @Assert\NotBlank
      * @Assert\Email(
      *     message = "The email '{{ value }}' is not a valid email."
      * )

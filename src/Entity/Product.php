@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
@@ -22,6 +23,7 @@ class Product
     private $id;
 
     /**
+     * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      * @JMS\Groups({"product"})
      */
@@ -29,12 +31,18 @@ class Product
 
 
     /**
+     * @Assert\NotBlank
+     * @Assert\Type(
+     *     type="integer",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
      * @ORM\Column(type="integer")
      */
     private $price;
 
     /**
      *
+     * @Assert\NotBlank
      * @ORM\OneToMany(targetEntity="App\Entity\OrderRule", mappedBy="product", orphanRemoval=true)
      *
      */
