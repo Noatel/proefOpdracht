@@ -78,6 +78,9 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/order/store", name="store", methods={"POST"})
+     * @param ValidatorInterface $validator
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(ValidatorInterface $validator, Request $request)
     {
@@ -164,6 +167,9 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/order/update/{id}", name="updateOrder", methods={"POST"})
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -174,7 +180,7 @@ class OrderController extends AbstractController
 
         //Check if the order is exsist
         if (!$order) {
-            $response = new JsonResponse(['error' => 'Please enter a valid product id']);
+            $response = new JsonResponse(['error' => 'Please enter a valid order id']);
             return $response;
         }
 
