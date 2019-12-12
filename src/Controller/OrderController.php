@@ -88,8 +88,6 @@ class OrderController extends AbstractController
         $content = $request->getContent();
         $data = json_decode($content);
 
-
-
         //Get the manager and the address object
         $entityManager = $this->getDoctrine()->getManager();
 

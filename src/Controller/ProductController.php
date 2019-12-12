@@ -98,4 +98,20 @@ class ProductController extends AbstractController
             return $response;
         }
     }
+
+    /**
+     * @Route("/product/delete/{id}", name="delete", methods={"POST"})
+     * @param $id
+     *
+     * @return JsonResponse
+     */
+    public function delete($id){
+        $order = $this->getDoctrine()->getRepository(Product::class)->find($id);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($order);
+        $entityManager->flush();
+
+        $response = new JsonResponse(['data' => 'The product with id ' . $id . ' is deleted']);
+        return $response;
+    }
 }
