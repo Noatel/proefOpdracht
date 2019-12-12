@@ -65,9 +65,9 @@ class ProductController extends AbstractController
      */
     public function update(Request $request, $id)
     {
-
         $product = $this->getDoctrine()->getRepository(Product::class)->find($id);
-        //Check if the product is exsist
+
+        //Check if the product is exist
         if (!$product) {
             $response = new JsonResponse(['error' => 'Please enter a valid product id']);
             return $response;
@@ -76,11 +76,14 @@ class ProductController extends AbstractController
         //Getting the json data and decode it
         $data = json_decode($request->getContent(), true);
 
+
         /** @var Product $product */
         $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
         $form->submit($data);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $product->setName($data["name"]);
             $product->setPrice($data["price"]);
 

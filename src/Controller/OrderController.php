@@ -89,12 +89,13 @@ class OrderController extends AbstractController
         $data = json_decode($content);
 
 
+
         //Get the manager and the address object
         $entityManager = $this->getDoctrine()->getManager();
 
         /** @var Address $address */
         $repository = $this->getDoctrine()->getRepository(Address::class);
-        $address = $repository->find($data->orders->adres_id);
+        $address = $repository->find($data->orders->address);
 
         //Create an Order
         $order = New Order();
@@ -154,7 +155,6 @@ class OrderController extends AbstractController
         //Set the reference
         $order->setReference($productName);
 
-
         //Set the order and flush it to the database
         $entityManager->persist($order);
         $entityManager->flush();
@@ -166,7 +166,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/order/update/{id}", name="updateOrder", methods={"POST"})
+     * @Route("/order/update/{id}", name="update", methods={"POST"})
      * @param Request $request
      * @param $id
      * @return JsonResponse
@@ -239,7 +239,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/order/delete/{id}", name="deleteOrder", methods={"POST"})
+     * @Route("/order/delete/{id}", name="delete", methods={"POST"})
      */
     public function delete($id)
     {
@@ -248,7 +248,7 @@ class OrderController extends AbstractController
         $entityManager->remove($order);
         $entityManager->flush();
 
-        $response = new JsonResponse(['data' => 'The order with ' . $order->getId() . ' is deleted']);
+        $response = new JsonResponse(['data' => 'The order with id ' . $id . ' is deleted']);
         return $response;
     }
 

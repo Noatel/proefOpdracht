@@ -26,7 +26,6 @@ class Order
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
      * @JMS\Groups({"order"})
      */
     private $reference;
